@@ -1,0 +1,27 @@
+{
+    "name": "shopware-flow-builder-stock-example/shopware-flow-builder-stock-example",
+    "description": "shopware-flow-builder-stock-example/shopware-flow-builder-stock-example",
+    "type": "shopware-platform-plugin",
+    "version": "1.0.0",
+    "license": "MIT",
+    "require": {
+        "shopware/core": "~6.6.0"
+    },
+    "extra": {
+        "shopware-plugin-class": "ShopwareFlowBuilderStockExample\\ShopwareFlowBuilderStockExample",
+        "label": {
+            "de-DE": "Skeleton plugin",
+            "en-GB": "Skeleton plugin"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "ShopwareFlowBuilderStockExample\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ShopwareFlowBuilderStockExample\\Tests\\": "tests/"
+        }
+    }
+}
