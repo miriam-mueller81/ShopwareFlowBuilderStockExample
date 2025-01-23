@@ -1,0 +1,7 @@
+{
+    "packages": {
+        "shopware-flow-builder-stock-example/shopware-flow-builder-stock-example": {
+            "dev-master": { @composer.json },
+        }
+    }
+}
