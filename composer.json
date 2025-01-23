@@ -1,6 +1,6 @@
 {
-    "name": "shopware-flow-builder-stock-example/shopware-flow-builder-stock-example",
-    "description": "shopware-flow-builder-stock-example/shopware-flow-builder-stock-example",
+    "name": "mmueller/shopware-flow-builder-stock-example",
+    "description": "mmueller/shopware-flow-builder-stock-example",
     "type": "shopware-platform-plugin",
     "version": "1.0.0",
     "license": "MIT",
