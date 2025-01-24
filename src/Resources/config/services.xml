@@ -5,6 +5,17 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <!-- Entity Definitions -->
+        <service id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\Entity\StockSubscriberDefinition">
+            <tag name="shopware.entity.definition" entity="mmueller_stock_subscriber" />
+        </service>
+
+        <!-- Store-Api Routes -->
+        <service id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\Api\Storefront\StockSubscriberRoute" >
+            <argument type="service" id="mmueller_stock_subscriber.repository"/>
+        </service>
+
+        <!-- Subscriber / Listener -->
         <service id="ShopwareFlowBuilderStockExample\Content\Product\Listener\ProductStockAlteredListener">
             <argument type="service" id="Shopware\Core\Framework\Event\BusinessEventCollector"/>
             <argument type="service" id="event_dispatcher"/>
