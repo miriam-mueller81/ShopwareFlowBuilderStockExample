@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ShopwareFlowBuilderStockExample\Stock\Content\StockSubscriber\Entity;
+namespace ShopwareFlowBuilderStockExample\Content\StockSubscriber\Entity;
 
 use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Content\Product\ProductEntity;

@@ -19,7 +19,6 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToManyAssociationField
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\UpdatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
-use ShopwareFlowBuilder\Stock\Content\StockSubscriber\Entity\StockSubscriberEntity;
 
 class StockSubscriberDefinition extends EntityDefinition
 {
@@ -38,13 +37,6 @@ class StockSubscriberDefinition extends EntityDefinition
     public function getCollectionClass(): string
     {
         return StockSubscriberCollection::class;
-    }
-
-    protected function defaultFields(): array
-    {
-        return [
-            'active' => true,
-        ];
     }
 
     protected function defineFields(): FieldCollection

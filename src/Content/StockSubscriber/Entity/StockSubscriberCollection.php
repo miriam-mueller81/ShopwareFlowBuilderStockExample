@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ShopwareFlowBuilderStockExample\Content\StockSubscriber\Entity;
 
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
-use ShopwareFlowBuilder\Stock\Content\StockSubscriber\Entity\StockSubscriberEntity;
 
 /**
  * @method void                         add(StockSubscriberEntity $entity)

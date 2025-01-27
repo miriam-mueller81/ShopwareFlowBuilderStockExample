@@ -10,9 +10,16 @@
             <tag name="shopware.entity.definition" entity="mmueller_stock_subscriber" />
         </service>
 
-        <!-- Store-Api Routes -->
-        <service id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\Api\Storefront\StockSubscriberRoute" >
+        <!-- Services -->
+        <service id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\StockSubscriberService">
             <argument type="service" id="mmueller_stock_subscriber.repository"/>
+            <argument type="service" id="customer.repository"/>
+            <argument type="service" id="product.repository"/>
+        </service>
+
+        <!-- Store-Api Routes -->
+        <service id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\Api\StoreApi\StockSubscriberRoute" public="true">
+            <argument type="service" id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\StockSubscriberService"/>
         </service>
 
         <!-- Subscriber / Listener -->
