@@ -1,0 +1,8 @@
+monolog:
+  channels: [ 'shopware-flow-builder-stock-example' ]
+  handlers:
+    sitegeistSelfregistrationLogHandler:
+      type: rotating_file
+      path: "%kernel.logs_dir%/shopware-flow-builder-stock-example%kernel.environment%.log"
+      level: info
+      channels: [ 'shopware-flow-builder-stock-example' ]
