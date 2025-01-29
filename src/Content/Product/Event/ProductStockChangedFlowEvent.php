@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace ShopwareFlowBuilderStockExample\Content\Product\Event;
 
 use Monolog\Level;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LogLevel;
-use Shopware\Core\Content\MailTemplate\Exception\MailEventConfigurationException;
 use Shopware\Core\Content\Product\ProductDefinition;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\Context;
@@ -20,13 +17,17 @@ use Shopware\Core\Framework\Event\ProductAware;
 use Shopware\Core\Framework\Log\LogAware;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class ProductStockAlteredFlowEvent extends Event implements ProductAware, MailAware, LogAware, FlowEventAware
+class ProductStockChangedFlowEvent extends Event implements ProductAware, MailAware, LogAware, FlowEventAware
 {
-    public const EVENT_NAME = 'product.stock.altered';
+    public const EVENT_NAME = 'product.changed.stock';
 
     public function __construct(
         protected Context $context,
         protected ProductEntity $product,
+        protected int $stockBefore,
+        protected int $stockAfter,
+        protected Level $logLevel,
+        protected MailRecipientStruct $recipients,
     ) {
     }
 
@@ -52,28 +53,29 @@ class ProductStockAlteredFlowEvent extends Event implements ProductAware, MailAw
 
     public function getSalesChannelId(): ?string
     {
-        return $this->context->getSource()->getSalesChannelId();
+        if (method_exists($this->context->getSource(), 'getSalesChannelId')) {
+            return $this->context->getSource()->getSalesChannelId();
+        }
+
+        return null;
     }
 
     public function getLogData(): array
     {
         return [
-            'test' => 'test',
+            'stock_before' => $this->stockBefore,
+            'stock_after' => $this->stockAfter,
         ];
     }
 
     public function getLogLevel(): Level
     {
-        return Level::Info;
+        return $this->logLevel;
     }
 
     public function getMailStruct(): MailRecipientStruct
     {
-        return new MailRecipientStruct(
-            [
-                'email' => 'test@test.de',
-            ]
-        );
+        return $this->recipients;
     }
 
     public static function getAvailableData(): EventDataCollection

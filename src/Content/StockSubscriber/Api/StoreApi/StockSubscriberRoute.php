@@ -4,17 +4,11 @@ declare(strict_types=1);
 
 namespace ShopwareFlowBuilderStockExample\Content\StockSubscriber\Api\StoreApi;
 
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Plugin\Exception\DecorationPatternException;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SalesChannel\SuccessResponse;
-use ShopwareFlowBuilderStockExample\Content\StockSubscriber\Entity\StockSubscriberCollection;
 use ShopwareFlowBuilderStockExample\Content\StockSubscriber\StockSubscriberService;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(defaults: ['_routeScope' => ['store-api']])]
