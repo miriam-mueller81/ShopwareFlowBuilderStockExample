@@ -55,11 +55,10 @@ class ProductStockChangedListener implements EventSubscriberInterface
                 && $command instanceof UpdateCommand
             ) {
                 $productId = $command->getDecodedPrimaryKey()['id'];
-                $product = $this->productService->findProductById($productId, $event->getContext());
 
                 $productStockChangedEvent = new ProductStockChangedFlowEvent(
                     $event->getContext(),
-                    $product,
+                    $productId,
                     (int) $command->getChangeSet()->getBefore('stock'),
                     (int) $command->getChangeSet()->getAfter('stock'),
                     Level::Info,

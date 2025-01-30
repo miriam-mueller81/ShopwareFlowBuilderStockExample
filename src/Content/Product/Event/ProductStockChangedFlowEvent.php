@@ -5,25 +5,27 @@ declare(strict_types=1);
 namespace ShopwareFlowBuilderStockExample\Content\Product\Event;
 
 use Monolog\Level;
+use Shopware\Core\Content\Flow\Dispatching\Aware\ScalarValuesAware;
 use Shopware\Core\Content\Product\ProductDefinition;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Event\EventData\EntityType;
 use Shopware\Core\Framework\Event\EventData\EventDataCollection;
 use Shopware\Core\Framework\Event\EventData\MailRecipientStruct;
+use Shopware\Core\Framework\Event\EventData\ScalarValueType;
 use Shopware\Core\Framework\Event\FlowEventAware;
 use Shopware\Core\Framework\Event\MailAware;
 use Shopware\Core\Framework\Event\ProductAware;
 use Shopware\Core\Framework\Log\LogAware;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class ProductStockChangedFlowEvent extends Event implements ProductAware, MailAware, LogAware, FlowEventAware
+class ProductStockChangedFlowEvent extends Event implements FlowEventAware, ProductAware, MailAware, LogAware, ScalarValuesAware
 {
     public const EVENT_NAME = 'product.changed.stock';
 
     public function __construct(
         protected Context $context,
-        protected ProductEntity $product,
+        protected string $productId,
         protected int $stockBefore,
         protected int $stockAfter,
         protected Level $logLevel,
@@ -31,26 +33,25 @@ class ProductStockChangedFlowEvent extends Event implements ProductAware, MailAw
     ) {
     }
 
+    /* required by FlowEventAware */
     public function getName(): string
     {
         return self::EVENT_NAME;
     }
 
+    /* required by FlowEventAware */
     public function getContext(): Context
     {
         return $this->context;
     }
 
-    public function getProduct(): ProductEntity
-    {
-        return $this->product;
-    }
-
+    /* required by ProductAware */
     public function getProductId(): string
     {
-        return $this->product->getId();
+        return $this->productId;
     }
 
+    /* required by MailAware */
     public function getSalesChannelId(): ?string
     {
         if (method_exists($this->context->getSource(), 'getSalesChannelId')) {
@@ -60,6 +61,13 @@ class ProductStockChangedFlowEvent extends Event implements ProductAware, MailAw
         return null;
     }
 
+    /* required by MailAware */
+    public function getMailStruct(): MailRecipientStruct
+    {
+        return $this->recipients;
+    }
+
+    /* required by LogAware */
     public function getLogData(): array
     {
         return [
@@ -68,19 +76,25 @@ class ProductStockChangedFlowEvent extends Event implements ProductAware, MailAw
         ];
     }
 
+    /* required by LogAware */
     public function getLogLevel(): Level
     {
         return $this->logLevel;
     }
 
-    public function getMailStruct(): MailRecipientStruct
-    {
-        return $this->recipients;
-    }
-
     public static function getAvailableData(): EventDataCollection
     {
         return (new EventDataCollection())
-            ->add('product', new EntityType(ProductDefinition::class));
+            ->add('product', new EntityType(ProductDefinition::class))
+            ->add('stockBefore', new ScalarValueType('int'))
+            ->add('stockAfter', new ScalarValueType('int'));
+    }
+
+    public function getValues(): array
+    {
+        return [
+            'stockBefore' => $this->stockBefore,
+            'stockAfter' => $this->stockAfter,
+        ];
     }
 }
