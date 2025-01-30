@@ -1,0 +1,17 @@
+{
+  "sw-flow": {
+    "triggers": {
+      "product": "Product",
+      "changed": "Changed",
+      "stock": "Stock"
+    },
+    "actions": {
+      "group": {
+        "product": "Product"
+      }
+    }
+  },
+  "set-product-custom-field-action": {
+    "title": "Add custom field"
+  }
+}

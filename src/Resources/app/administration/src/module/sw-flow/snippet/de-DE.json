@@ -1,0 +1,17 @@
+{
+  "sw-flow": {
+    "triggers": {
+      "product": "Produkt",
+      "changed": "Geändert",
+      "stock": "Lagerbestand"
+    },
+    "actions": {
+      "group": {
+        "product": "Produkt"
+      }
+    }
+  },
+  "set-product-custom-field-action": {
+    "title": "Custom Field hinzufügen"
+  }
+}

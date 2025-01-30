@@ -1,0 +1,11 @@
+{% block set_product_custom_field_action_modal %}
+<sw-modal
+        class="set-product-custom-field-action-modal"
+        :title="$tc('set-product-custom-field-action.title')"
+        @modal-close="onClose"
+>
+    {% block set_product_custom_field_action_modal_content %}
+        MOIN
+    {% endblock %}
+</sw-modal>
+{% endblock %}
