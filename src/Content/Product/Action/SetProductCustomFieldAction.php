@@ -50,16 +50,15 @@ class SetProductCustomFieldAction extends FlowAction
             return;
         }
 
-        $renderedCustomFields = [];
-        foreach ($customFields as $key => $customField) {
-            $customFieldName = $this->getCustomFieldNameFromId($flow->getConfig()['customFieldId'], $flow->getConfig()['entity']);
-            if ($customFieldName !== $key) {
-                continue;
-            }
-            $renderedValue = $this->templateRenderer->render($customField, $flow->getVars()['data'], $flow->getContext());
-            $renderedCustomFields[$key] = $renderedValue;
-            $customFields[$key] = $renderedValue;
+        $customFieldName = $this->getCustomFieldNameFromId($flow->getConfig()['customFieldId'], $flow->getConfig()['entity']);
+        $customField = $customFields[$customFieldName] ?? null;
+        if ($customField === null) {
+            return;
         }
+
+        $renderedValue = $this->templateRenderer->render($customField, $flow->getVars()['data'], $flow->getContext());
+        $renderedCustomFields[$customFieldName] = $renderedValue;
+        $customFields[$customFieldName] = $renderedValue;
 
         $product->setCustomfields($customFields);
         $flow->setData('product', $product);

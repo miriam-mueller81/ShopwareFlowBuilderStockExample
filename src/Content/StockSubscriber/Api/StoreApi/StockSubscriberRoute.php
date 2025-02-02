@@ -64,6 +64,13 @@ class StockSubscriberRoute extends AbstractStockSubscriberRoute
         return new SuccessResponse();
     }
 
+    /**
+     * Example Json:
+     * {
+     *     customerId: <customerId>,
+     *     productId: <productId>
+     * }
+     */
     #[Route(path: '/store-api/stock-subscriber/unsubscribe', name: 'store-api.stock-subscriber.unsubscribe', methods: ['POST'], defaults: ['_entity' => 'mmueller_stock_subscriber'])]
     public function unsubscribe(RequestDataBag $dataBag, SalesChannelContext $salesChannelContext): SuccessResponse
     {
