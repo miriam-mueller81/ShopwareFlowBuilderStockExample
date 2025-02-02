@@ -15,6 +15,7 @@ use Shopware\Core\Framework\App\Flow\Action\AppFlowActionProvider;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Event\ProductAware;
 use Shopware\Core\Framework\Extensions\ExtensionDispatcher;
+use Shopware\Core\Framework\Rule\Rule;
 use Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
@@ -69,11 +70,13 @@ class FlowExecutorDecorator extends FlowExecutor
 
         $rule = $this->ruleLoader->load($event->getContext())->filterForFlow()->get($ruleId);
 
+        if (!$rule || !$rule->getPayload() instanceof Rule) {
+            return \in_array($ruleId, $event->getContext()->getRuleIds(), true);
+        }
+
         $saleschannelId = $this->systemConfigService->get('ShopwareFlowBuilderStockExample.config.saleschannel');
         $saleschannelContext = $this->salesChannelContextFactory->create('', $saleschannelId);
 
-        $isRuleValid = $rule->getPayload()->match(new ProductCustomFieldScope($product, $saleschannelContext));
-
-        return true;
+        return $rule->getPayload()->match(new ProductCustomFieldScope($product, $saleschannelContext));
     }
 }

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace ShopwareFlowBuilderStockExample\Content\StockSubscriber;
 
+use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
+use ShopwareFlowBuilderStockExample\Content\StockSubscriber\Entity\StockSubscriberCollection;
 use ShopwareFlowBuilderStockExample\Content\StockSubscriber\Entity\StockSubscriberEntity;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -66,6 +68,16 @@ class StockSubscriberService
         $criteria->addFilter(new EqualsFilter('productId', $productId));
 
         return $this->stockSubscriberRepository->search($criteria, $salesChannelContext->getContext())->first();
+    }
+
+    public function findActiveStockSubscriberForProduct(string $productId, Context $context): StockSubscriberCollection
+    {
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('productId', $productId));
+        $criteria->addFilter(new EqualsFilter('active', true));
+        $criteria->addAssociation('customer');
+
+        return $this->stockSubscriberRepository->search($criteria, $context)->getEntities();
     }
 
     public function createStockSubscriber(string $customerId, string $productId, bool $active, SalesChannelContext $salesChannelContext): void

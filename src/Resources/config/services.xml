@@ -57,6 +57,7 @@
             <argument type="service" id="Shopware\Core\Framework\Event\BusinessEventCollector"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="ShopwareFlowBuilderStockExample\Content\Product\ProductService"/>
+            <argument type="service" id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\StockSubscriberService"/>
             <tag name="kernel.event_subscriber"/>
         </service>
     </services>

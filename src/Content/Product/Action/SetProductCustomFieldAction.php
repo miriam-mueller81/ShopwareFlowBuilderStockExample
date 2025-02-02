@@ -58,7 +58,11 @@ class SetProductCustomFieldAction extends FlowAction
             }
             $renderedValue = $this->templateRenderer->render($customField, $flow->getVars()['data'], $flow->getContext());
             $renderedCustomFields[$key] = $renderedValue;
+            $customFields[$key] = $renderedValue;
         }
+
+        $product->setCustomfields($customFields);
+        $flow->setData('product', $product);
 
         $this->productRepository->upsert([
             [
