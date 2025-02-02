@@ -10,7 +10,7 @@ Component.override('sw-flow-mail-send-modal', {
                     ...recipientOptions,
                     {
                         value: 'stockSubscriber',
-                        label: this.$tc('sw-flow.modals.mail.labelStockSubscriberMail'),
+                        label: 'Stocksubscriber List',
                     }
                 ];
             }
