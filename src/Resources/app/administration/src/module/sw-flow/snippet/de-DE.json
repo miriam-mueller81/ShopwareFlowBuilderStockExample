@@ -13,5 +13,24 @@
   },
   "set-product-custom-field-action": {
     "title": "Custom Field hinzufügen"
+  },
+  "sw-settings-rule": {
+    "detail": {
+      "groups": {
+        "product": "Produkt"
+      }
+    }
+  },
+  "sw-condition": {
+    "condition": {
+      "product": {
+        "productCustomFieldRule": "Produkt Custom Field",
+        "field": {
+          "customFieldSelect": {
+            "placeholder": "Bitte wählen"
+          }
+        }
+      }
+    }
   }
 }

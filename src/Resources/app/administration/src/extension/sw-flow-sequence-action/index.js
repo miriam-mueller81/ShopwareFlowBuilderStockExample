@@ -1,11 +1,13 @@
-import {ACTION, GROUP} from '../../constant/set-product-custom-field-action.constant';
-import {
-    ActionContext
-} from "../../../../../../../../../shopware/administration/Resources/app/administration/src/module/sw-flow/service/flow-builder.service";
+import { ACTION, GROUP } from '../../constant/set-product-custom-field-action.constant';
 
 const { Component } = Shopware;
+const { mapState, mapGetters } = Component.getComponentHelper();
 
 Component.override('sw-flow-sequence-action', {
+    inject: [
+        'flowBuilderService',
+    ],
+
     computed: {
         groups() { // only required if new group
             this.actionGroups.unshift(GROUP);
@@ -22,18 +24,11 @@ Component.override('sw-flow-sequence-action', {
         },
     },
 
+    created() {
+        this.flowBuilderService.$entityAction[ACTION.SET_PRODUCT_CUSTOM_FIELD] = 'product';
+    },
+
     methods: {
-        getActionDescriptions(sequence) {
-            console.log('SEQUENCE');
-            /*const context: ActionContext = { data, sequence, translator };
-
-            if(sequence.actionName === ACTION.SET_PRODUCT_CUSTOM_FIELD){
-                this.$super('getCustomFieldDescription', context);
-            }
-            return this.$super('getActionDescriptions', sequence)*/
-
-        },
-
         getActionTitle(actionName) {
             if (actionName === ACTION.SET_PRODUCT_CUSTOM_FIELD) {
                 return {

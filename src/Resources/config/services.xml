@@ -7,12 +7,34 @@
     <services>
         <!-- Actions -->
         <service id="ShopwareFlowBuilderStockExample\Content\Product\Action\SetProductCustomFieldAction">
-            <tag name="flow.action" priority="100" key="action.set.customer.custom.field"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer"/>
+            <tag name="flow.action" priority="350" key="action.set.product.custom.field"/>
+        </service>
+
+        <!-- Decorators -->
+        <service id="ShopwareFlowBuilderStockExample\Content\Flow\FlowExecutorDecorator" decorates="Shopware\Core\Content\Flow\Dispatching\FlowExecutor" public="true">
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="Shopware\Core\Framework\App\Flow\Action\AppFlowActionProvider" />
+            <argument type="service" id="Shopware\Core\Checkout\Cart\RuleLoader"/>
+            <argument type="service" id="Shopware\Core\Content\Flow\Rule\FlowRuleScopeBuilder"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="Shopware\Core\Framework\Extensions\ExtensionDispatcher"/>
+            <argument type="tagged_iterator" tag="flow.action" index-by="key" />
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService" />
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory"/>
+            <argument type="service" id="ShopwareFlowBuilderStockExample\Content\Flow\FlowExecutorDecorator.inner"/>
         </service>
 
         <!-- Entity Definitions -->
         <service id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\Entity\StockSubscriberDefinition">
             <tag name="shopware.entity.definition" entity="mmueller_stock_subscriber" />
+        </service>
+
+        <!-- Rules -->
+        <service id="ShopwareFlowBuilderStockExample\Content\Product\Rule\ProductCustomFieldRule">
+            <tag name="shopware.rule.definition" />
         </service>
 
         <!-- Services -->

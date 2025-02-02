@@ -4,16 +4,25 @@ declare(strict_types=1);
 
 namespace ShopwareFlowBuilderStockExample\Content\Product\Action;
 
+use Doctrine\DBAL\Connection;
 use Shopware\Core\Content\Flow\Dispatching\Action\CustomFieldActionTrait;
 use Shopware\Core\Content\Flow\Dispatching\Action\FlowAction;
 use Shopware\Core\Content\Flow\Dispatching\StorableFlow;
-use Shopware\Core\Framework\Event\OrderAware;
+use Shopware\Core\Content\Product\ProductEntity;
+use Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Event\ProductAware;
-use ShopwareFlowBuilderStockExample\Content\Product\Event\ProductStockAware;
 
 class SetProductCustomFieldAction extends FlowAction
 {
     use CustomFieldActionTrait;
+
+    public function __construct(
+        protected Connection $connection,
+        protected EntityRepository $productRepository,
+        protected StringTemplateRenderer $templateRenderer
+    ) {
+    }
 
     public static function getName(): string
     {
@@ -28,8 +37,34 @@ class SetProductCustomFieldAction extends FlowAction
 
     public function handleFlow(StorableFlow $flow): void
     {
-        if (!$flow->hasData(ProductAware::PRODUCT_ID)) {
+        if (!$flow->hasData(ProductAware::PRODUCT)) {
             return;
         }
+
+        /** @var ProductEntity $product */
+        $product = $flow->getData(ProductAware::PRODUCT);
+
+        $customFields = $this->getCustomFieldForUpdating($product->getCustomfields(), $flow->getConfig());
+
+        if ($customFields === null) {
+            return;
+        }
+
+        $renderedCustomFields = [];
+        foreach ($customFields as $key => $customField) {
+            $customFieldName = $this->getCustomFieldNameFromId($flow->getConfig()['customFieldId'], $flow->getConfig()['entity']);
+            if ($customFieldName !== $key) {
+                continue;
+            }
+            $renderedValue = $this->templateRenderer->render($customField, $flow->getVars()['data'], $flow->getContext());
+            $renderedCustomFields[$key] = $renderedValue;
+        }
+
+        $this->productRepository->upsert([
+            [
+                'id' => $product->getId(),
+                'customFields' => $renderedCustomFields,
+            ],
+        ], $flow->getContext());
     }
 }

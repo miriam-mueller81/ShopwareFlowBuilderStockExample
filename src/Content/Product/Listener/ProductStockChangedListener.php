@@ -54,6 +54,10 @@ class ProductStockChangedListener implements EventSubscriberInterface
             if ($command->getEntityName() === ProductDefinition::ENTITY_NAME
                 && $command instanceof UpdateCommand
             ) {
+                if ($command->getChangeSet() === null) {
+                    continue;
+                }
+
                 $productId = $command->getDecodedPrimaryKey()['id'];
 
                 $productStockChangedEvent = new ProductStockChangedFlowEvent(

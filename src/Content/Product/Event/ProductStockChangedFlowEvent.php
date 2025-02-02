@@ -7,7 +7,6 @@ namespace ShopwareFlowBuilderStockExample\Content\Product\Event;
 use Monolog\Level;
 use Shopware\Core\Content\Flow\Dispatching\Aware\ScalarValuesAware;
 use Shopware\Core\Content\Product\ProductDefinition;
-use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Event\EventData\EntityType;
 use Shopware\Core\Framework\Event\EventData\EventDataCollection;
@@ -71,8 +70,8 @@ class ProductStockChangedFlowEvent extends Event implements FlowEventAware, Prod
     public function getLogData(): array
     {
         return [
-            'stock_before' => $this->stockBefore,
-            'stock_after' => $this->stockAfter,
+            'stockBefore' => $this->stockBefore,
+            'stockAfter' => $this->stockAfter,
         ];
     }
 

@@ -8,5 +8,4 @@ use Shopware\Core\Framework\Event\FlowEventAware;
 
 interface ProductStockAware extends FlowEventAware
 {
-
 }
