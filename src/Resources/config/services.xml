@@ -53,6 +53,12 @@
             <argument type="service" id="event_dispatcher" />
         </service>
 
+        <!-- Storer -->
+        <service id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\Event\StockSubscriberStorer">
+            <argument type="service" id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\StockSubscriberService"/>
+            <tag name="flow.storer"/>
+        </service>
+
         <!-- Subscriber / Listener -->
         <service id="ShopwareFlowBuilderStockExample\Content\Product\Listener\ProductStockChangedListener">
             <argument type="service" id="Shopware\Core\Framework\Event\BusinessEventCollector"/>

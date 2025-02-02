@@ -71,6 +71,16 @@ class StockSubscriberService
         return $this->stockSubscriberRepository->search($criteria, $salesChannelContext->getContext())->first();
     }
 
+    public function findStockSubscriberById(string $id, Context $context): ?StockSubscriberEntity
+    {
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('id', $id));
+        $criteria->addAssociation('customer');
+        $criteria->addAssociation('product');
+
+        return $this->stockSubscriberRepository->search($criteria, $context)->first();
+    }
+
     public function findActiveStockSubscriberForProduct(string $productId, Context $context): StockSubscriberCollection
     {
         $criteria = new Criteria();
@@ -95,7 +105,12 @@ class StockSubscriberService
             return null;
         }
 
-        return $stockSubscriber = $this->stockSubscriberRepository->search(new Criteria($createdIds), $salesChannelContext->getContext())->first();
+        return $stockSubscriber = $this->stockSubscriberRepository->search(
+            (new Criteria($createdIds))
+                ->addAssociation('customer')
+                ->addAssociation('product'),
+            $salesChannelContext->getContext()
+        )->first();
     }
 
     public function updateStockSubscriber(string $id, bool $active, SalesChannelContext $salesChannelContext): ?StockSubscriberEntity
@@ -111,6 +126,11 @@ class StockSubscriberService
             return null;
         }
 
-        return $stockSubscriber = $this->stockSubscriberRepository->search(new Criteria($updatedIds), $salesChannelContext->getContext())->first();
+        return $stockSubscriber = $this->stockSubscriberRepository->search(
+            (new Criteria($updatedIds))
+                ->addAssociation('customer')
+                ->addAssociation('product'),
+            $salesChannelContext->getContext()
+        )->first();
     }
 }

@@ -9,7 +9,9 @@ use ShopwareFlowBuilderStockExample\Content\StockSubscriber\Entity\StockSubscrib
 
 interface StockSubscriberAware extends FlowEventAware
 {
+    public const STOCKSUBSCRIBER_ID = 'stockSubscriberId';
+
     public const STOCKSUBSCRIBER = 'stockSubscriber';
 
-    public function getStockSubscriber(): StockSubscriberEntity;
+    public function getStockSubscriberId(): string;
 }

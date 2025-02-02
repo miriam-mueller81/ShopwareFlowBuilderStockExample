@@ -24,7 +24,8 @@ class StockSubscriberSubscribedEvent extends Event implements FlowEventAware, Ma
     public function __construct(
         protected Context $context,
         protected MailRecipientStruct $recipients,
-        protected StockSubscriberEntity $stockSubscriber,
+        protected string $stockSubscriberId,
+        protected string $customerId,
     ) {
     }
 
@@ -59,13 +60,13 @@ class StockSubscriberSubscribedEvent extends Event implements FlowEventAware, Ma
     /* required by CustomerAware */
     public function getCustomerId(): string
     {
-        return $this->stockSubscriber->getCustomerId();
+        return $this->customerId;
     }
 
     /* required by StockSubscriber Aware */
-    public function getStockSubscriber(): StockSubscriberEntity
+    public function getStockSubscriberId(): string
     {
-        return $this->stockSubscriber;
+        return $this->stockSubscriberId;
     }
 
     public static function getAvailableData(): EventDataCollection

@@ -50,12 +50,15 @@ class StockSubscriberRoute extends AbstractStockSubscriberRoute
         }
 
         if ($stockSubscriber) {
-            $productStockChangedEvent = new StockSubscriberSubscribedEvent(
+            $stockSubscriberSubscribeEvent = new StockSubscriberSubscribedEvent(
                 $salesChannelContext->getContext(),
-                new MailRecipientStruct([]),
-                $stockSubscriber
+                new MailRecipientStruct([
+                    $stockSubscriber->getCustomer()->getEmail() => $stockSubscriber->getCustomer()->getFirstName() . ' ' . $stockSubscriber->getCustomer()->getLastName(),
+                ]),
+                $stockSubscriber->getId(),
+                $stockSubscriber->getCustomer()->getId(),
             );
-            $this->eventDispatcher->dispatch($productStockChangedEvent, StockSubscriberSubscribedEvent::EVENT_NAME);
+            $this->eventDispatcher->dispatch($stockSubscriberSubscribeEvent, StockSubscriberSubscribedEvent::EVENT_NAME);
         }
 
         return new SuccessResponse();
@@ -66,17 +69,20 @@ class StockSubscriberRoute extends AbstractStockSubscriberRoute
     {
         $this->stockSubscriberService->validateData($dataBag, $salesChannelContext);
 
-        $existingCustomer = $this->stockSubscriberService->findStockSubscriber($dataBag->get('customerId'), $dataBag->get('productId'), $salesChannelContext);
+        $existingStockSubscriber = $this->stockSubscriberService->findStockSubscriber($dataBag->get('customerId'), $dataBag->get('productId'), $salesChannelContext);
 
-        $stockSubscriber = $this->stockSubscriberService->updateStockSubscriber($existingCustomer->getId(), false, $salesChannelContext);
+        $stockSubscriber = $this->stockSubscriberService->updateStockSubscriber($existingStockSubscriber->getId(), false, $salesChannelContext);
 
         if ($stockSubscriber) {
-            $productStockChangedEvent = new StockSubscriberUnsubscribedEvent(
+            $stockSubscriberUnsubscribeEvent = new StockSubscriberUnsubscribedEvent(
                 $salesChannelContext->getContext(),
-                new MailRecipientStruct([]),
-                $stockSubscriber
+                new MailRecipientStruct([
+                    $stockSubscriber->getCustomer()->getEmail() => $stockSubscriber->getCustomer()->getFirstName() . ' ' . $stockSubscriber->getCustomer()->getLastName(),
+                ]),
+                $stockSubscriber->getId(),
+                $stockSubscriber->getCustomer()->getId(),
             );
-            $this->eventDispatcher->dispatch($productStockChangedEvent, StockSubscriberUnsubscribedEvent::EVENT_NAME);
+            $this->eventDispatcher->dispatch($stockSubscriberUnsubscribeEvent, StockSubscriberUnsubscribedEvent::EVENT_NAME);
         }
 
         return new SuccessResponse();
