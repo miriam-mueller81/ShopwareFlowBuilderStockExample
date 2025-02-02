@@ -34,7 +34,7 @@ class ProductStockChangedListener implements EventSubscriberInterface
         return [
             PostWriteValidationEvent::class => 'onPostWriteValidation',
             PreWriteValidationEvent::class => 'onPreWriteValidation',
-            BusinessEventCollectorEvent::NAME => ['onAddProductStockChangedEvent', 1000],
+            BusinessEventCollectorEvent::NAME => ['onBusinessEventCollect', 1000],
         ];
     }
 
@@ -76,7 +76,7 @@ class ProductStockChangedListener implements EventSubscriberInterface
         }
     }
 
-    public function onAddProductStockChangedEvent(BusinessEventCollectorEvent $event): void
+    public function onBusinessEventCollect(BusinessEventCollectorEvent $event): void
     {
         $collection = $event->getCollection();
 
