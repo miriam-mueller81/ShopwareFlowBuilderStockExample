@@ -50,6 +50,7 @@
         <!-- Store-Api Routes -->
         <service id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\Api\StoreApi\StockSubscriberRoute" public="true">
             <argument type="service" id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\StockSubscriberService"/>
+            <argument type="service" id="event_dispatcher" />
         </service>
 
         <!-- Subscriber / Listener -->
@@ -58,6 +59,10 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="ShopwareFlowBuilderStockExample\Content\Product\ProductService"/>
             <argument type="service" id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\StockSubscriberService"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+        <service id="ShopwareFlowBuilderStockExample\Content\StockSubscriber\Listener\StockSubscriberListener">
+            <argument type="service" id="Shopware\Core\Framework\Event\BusinessEventCollector"/>
             <tag name="kernel.event_subscriber"/>
         </service>
     </services>

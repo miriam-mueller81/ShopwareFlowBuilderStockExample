@@ -11,6 +11,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use ShopwareFlowBuilderStockExample\Content\StockSubscriber\Entity\StockSubscriberCollection;
+use ShopwareFlowBuilderStockExample\Content\StockSubscriber\Entity\StockSubscriberDefinition;
 use ShopwareFlowBuilderStockExample\Content\StockSubscriber\Entity\StockSubscriberEntity;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -80,24 +81,36 @@ class StockSubscriberService
         return $this->stockSubscriberRepository->search($criteria, $context)->getEntities();
     }
 
-    public function createStockSubscriber(string $customerId, string $productId, bool $active, SalesChannelContext $salesChannelContext): void
+    public function createStockSubscriber(string $customerId, string $productId, bool $active, SalesChannelContext $salesChannelContext): ?StockSubscriberEntity
     {
-        $this->stockSubscriberRepository->create([
+        $createdIds = $this->stockSubscriberRepository->create([
             [
                 'customerId' => $customerId,
                 'productId' => $productId,
                 'active' => $active,
             ]
-        ], $salesChannelContext->getContext());
+        ], $salesChannelContext->getContext())->getPrimaryKeys(StockSubscriberDefinition::ENTITY_NAME);
+
+        if (empty($createdIds)) {
+            return null;
+        }
+
+        return $stockSubscriber = $this->stockSubscriberRepository->search(new Criteria($createdIds), $salesChannelContext->getContext())->first();
     }
 
-    public function updateStockSubscriber(string $id, bool $active, SalesChannelContext $salesChannelContext): void
+    public function updateStockSubscriber(string $id, bool $active, SalesChannelContext $salesChannelContext): ?StockSubscriberEntity
     {
-        $this->stockSubscriberRepository->update([
+        $updatedIds = $this->stockSubscriberRepository->update([
             [
                 'id' => $id,
                 'active' => $active,
             ]
-        ], $salesChannelContext->getContext());
+        ], $salesChannelContext->getContext())->getPrimaryKeys(StockSubscriberDefinition::ENTITY_NAME);
+
+        if (empty($updatedIds)) {
+            return null;
+        }
+
+        return $stockSubscriber = $this->stockSubscriberRepository->search(new Criteria($updatedIds), $salesChannelContext->getContext())->first();
     }
 }

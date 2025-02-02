@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace ShopwareFlowBuilderStockExample\Content\StockSubscriber\Api\StoreApi;
 
+use Shopware\Core\Framework\Event\EventData\MailRecipientStruct;
 use Shopware\Core\Framework\Plugin\Exception\DecorationPatternException;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SalesChannel\SuccessResponse;
+use ShopwareFlowBuilderStockExample\Content\StockSubscriber\Event\StockSubscriberSubscribedEvent;
+use ShopwareFlowBuilderStockExample\Content\StockSubscriber\Event\StockSubscriberUnsubscribedEvent;
 use ShopwareFlowBuilderStockExample\Content\StockSubscriber\StockSubscriberService;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[Route(defaults: ['_routeScope' => ['store-api']])]
 class StockSubscriberRoute extends AbstractStockSubscriberRoute
 {
     public function __construct(
-        protected StockSubscriberService $stockSubscriberService
+        protected StockSubscriberService $stockSubscriberService,
+        protected EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -39,9 +44,18 @@ class StockSubscriberRoute extends AbstractStockSubscriberRoute
         $existingCustomer = $this->stockSubscriberService->findStockSubscriber($dataBag->get('customerId'), $dataBag->get('productId'), $salesChannelContext);
 
         if ($existingCustomer === null) {
-            $this->stockSubscriberService->createStockSubscriber($dataBag->get('customerId'), $dataBag->get('productId'), true, $salesChannelContext);
+            $stockSubscriber = $this->stockSubscriberService->createStockSubscriber($dataBag->get('customerId'), $dataBag->get('productId'), true, $salesChannelContext);
         }  else {
-            $this->stockSubscriberService->updateStockSubscriber($existingCustomer->getId(), true, $salesChannelContext);
+            $stockSubscriber = $this->stockSubscriberService->updateStockSubscriber($existingCustomer->getId(), true, $salesChannelContext);
+        }
+
+        if ($stockSubscriber) {
+            $productStockChangedEvent = new StockSubscriberSubscribedEvent(
+                $salesChannelContext->getContext(),
+                new MailRecipientStruct([]),
+                $stockSubscriber
+            );
+            $this->eventDispatcher->dispatch($productStockChangedEvent, StockSubscriberSubscribedEvent::EVENT_NAME);
         }
 
         return new SuccessResponse();
@@ -54,7 +68,16 @@ class StockSubscriberRoute extends AbstractStockSubscriberRoute
 
         $existingCustomer = $this->stockSubscriberService->findStockSubscriber($dataBag->get('customerId'), $dataBag->get('productId'), $salesChannelContext);
 
-        $this->stockSubscriberService->updateStockSubscriber($existingCustomer->getId(), false, $salesChannelContext);
+        $stockSubscriber = $this->stockSubscriberService->updateStockSubscriber($existingCustomer->getId(), false, $salesChannelContext);
+
+        if ($stockSubscriber) {
+            $productStockChangedEvent = new StockSubscriberUnsubscribedEvent(
+                $salesChannelContext->getContext(),
+                new MailRecipientStruct([]),
+                $stockSubscriber
+            );
+            $this->eventDispatcher->dispatch($productStockChangedEvent, StockSubscriberUnsubscribedEvent::EVENT_NAME);
+        }
 
         return new SuccessResponse();
     }
