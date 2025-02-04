@@ -3,7 +3,10 @@
     "triggers": {
       "product": "Produkt",
       "changed": "Geändert",
-      "stock": "Lagerbestand"
+      "stock": "Lagerbestand",
+      "subscriber": "Abonnenten",
+      "subscribed": "abonniert",
+      "unsubscribed": "abgemeldet"
     },
     "actions": {
       "group": {

@@ -3,7 +3,10 @@
     "triggers": {
       "product": "Product",
       "changed": "Changed",
-      "stock": "Stock"
+      "stock": "Stock",
+      "subscriber": "subscriber",
+      "subscribed": "subscribed",
+      "unsubscribed": "unsubscribed"
     },
     "actions": {
       "group": {

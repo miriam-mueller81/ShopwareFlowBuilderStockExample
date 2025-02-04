@@ -16,7 +16,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class StockSubscriberSubscribedEvent extends Event implements FlowEventAware, MailAware, CustomerAware, StockSubscriberAware
 {
-    public const EVENT_NAME = 'stock_subscriber.subscribed';
+    public const EVENT_NAME = 'stock.subscriber.subscribed';
 
     public function __construct(
         protected Context $context,
